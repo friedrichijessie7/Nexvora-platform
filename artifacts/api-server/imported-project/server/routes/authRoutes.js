@@ -1,0 +1,10 @@
+const router=require('express').Router();
+const controller=require('../controllers/authController');
+const {verifyToken,requireRole}=require('../middleware/auth');
+const {strictLimiter}=require('../middleware/rateLimiter');
+router.post('/login',strictLimiter(),controller.login);
+router.post('/refresh',strictLimiter(),controller.refresh);
+router.post('/logout',verifyToken,controller.logout);
+router.get('/me',verifyToken,controller.me);
+router.post('/register',strictLimiter(),verifyToken,requireRole('superadmin'),controller.register);
+module.exports=router;

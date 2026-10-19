@@ -1,0 +1,15 @@
+const router=require('express').Router();
+const c=require('../controllers/adminController');
+const {verifyToken,requireRole}=require('../middleware/auth');
+const {strictLimiter}=require('../middleware/rateLimiter');
+router.use(strictLimiter(),verifyToken);
+router.post('/shipments',requireRole('superadmin','operator'),c.createShipment);
+router.get('/shipments',requireRole('superadmin','operator','viewer'),require('../controllers/shipmentController').list);
+router.patch('/shipments/:id/status',requireRole('superadmin','operator'),c.updateStatus);
+router.patch('/shipments/:id/location',requireRole('superadmin','operator'),c.updateLocation);
+router.post('/shipments/:id/simulate',requireRole('superadmin','operator'),c.simulate);
+router.post('/shipments/:id/pod',requireRole('superadmin','operator'),c.attachPod);
+router.post('/facilities',requireRole('superadmin','operator'),c.createFacility);
+router.post('/users',requireRole('superadmin'),c.createUser);
+router.get('/audit-logs',requireRole('superadmin'),c.listAuditLogs);
+module.exports=router;
