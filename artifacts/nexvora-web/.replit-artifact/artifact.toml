@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "NEXVORA"
+description = "A shipment visibility and network-operations web app for public tracking and authenticated shipment control, powered by the existing NEXVORA shipment API."
+version = "1.0.0"
+id = "artifacts/nexvora-web"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24376
+
+[services.development]
+run = "pnpm --filter @workspace/nexvora-web run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/nexvora-web", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/nexvora-web/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24376"
+BASE_PATH = "/"

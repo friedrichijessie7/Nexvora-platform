@@ -1,13 +1,13 @@
 kind = "api"
-previewPath = "/"
-title = "Nexvora Control Center"
+previewPath = "/api/"
+title = "Nexvora Shipment API"
 version = "1.0.0"
 id = "3B4_FFSkEVBkAeYMFRJ2e"
 
 [[services]]
 localPort = 3000
 name = "API Server"
-paths = ["/"]
+paths = ["/api", "/health"]
 
 [services.development]
 run = "pnpm --filter @workspace/api-server run dev"

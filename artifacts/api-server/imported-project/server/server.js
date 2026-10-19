@@ -13,15 +13,32 @@ const app=express();
 app.set('trust proxy',1);
 app.use(helmet({contentSecurityPolicy:{directives:{defaultSrc:["'self'"],styleSrc:["'self'","'unsafe-inline'"],scriptSrc:["'self'","'unsafe-inline'"],imgSrc:["'self'",'data:','https:'],connectSrc:["'self'"]}}}));
 const allowAnyOrigin = env.ALLOWED_ORIGINS.includes('*');
-app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin || allowAnyOrigin || env.ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-    return cb(Object.assign(new Error('Origin not allowed'), { status: 403, code: 'CORS_DENIED' }));
-  },
-  credentials: !allowAnyOrigin,
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use((req, res, next) => {
+  const origin = req.get('origin');
+  const host = (req.get('x-forwarded-host') || req.get('host') || '').split(',')[0].trim().toLowerCase();
+  const protocol = (req.get('x-forwarded-proto') || req.protocol).split(',')[0].trim().replace(/:$/, '').toLowerCase();
+  let sameOrigin = false;
+
+  if (origin && host) {
+    try {
+      const parsedOrigin = new URL(origin);
+      sameOrigin = parsedOrigin.host.toLowerCase() === host && parsedOrigin.protocol.replace(/:$/, '').toLowerCase() === protocol;
+    } catch {
+      sameOrigin = false;
+    }
+  }
+
+  if (origin && !sameOrigin && !allowAnyOrigin && !env.ALLOWED_ORIGINS.includes(origin)) {
+    return next(Object.assign(new Error('Origin not allowed'), { status: 403, code: 'CORS_DENIED' }));
+  }
+
+  return cors({
+    origin: allowAnyOrigin ? '*' : (origin || false),
+    credentials: !allowAnyOrigin,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })(req, res, next);
+});
 app.use(compression());app.use(express.json({limit:'100kb'}));app.use(morgan(env.NODE_ENV==='production'?'combined':'dev'));app.use(globalLimiter());
 app.get('/health',(req,res)=>res.json({success:true,data:{status:'healthy',service:env.COMPANY_NAME,timestamp:new Date().toISOString()}}));
 app.use('/api/track',publicRoutes);app.use('/api/auth',authRoutes);app.use('/api/admin',adminRoutes);
