@@ -21,4 +21,6 @@ module.exports = Object.freeze({
   ALLOWED_ORIGINS: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',').map((v) => v.trim()).filter(Boolean),
   BCRYPT_ROUNDS: Math.min(15, Math.max(10, Number(process.env.BCRYPT_ROUNDS || 12))),
   TRACKING_PREFIX: (process.env.TRACKING_PREFIX || 'NX').toUpperCase(),
+  COMPANY_NAME: process.env.COMPANY_NAME || 'Northstar OS',
+  SUPABASE_DATABASE_URL: process.env.SUPABASE_DATABASE_URL || null,
 });

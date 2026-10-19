@@ -18,3 +18,13 @@ expertMode = true
 [postMerge]
 path = "scripts/post-merge.sh"
 timeoutMs = 20000
+
+[userenv]
+
+[userenv.shared]
+ALLOWED_ORIGINS = "*"
+COMPANY_NAME = "NEXVORA"
+NODE_ENV = "production"
+SUPABASE_URL = "https://nfalutflambvackdsqhk.supabase.co"
+TRACKING_PREFIX = "NXV"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mYWx1dGZsYW1idmFja2RzcWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MTE5MjcsImV4cCI6MjEwNzk4NzkyN30.H3jstddKl-iFxh4MwDD3LS0gFCMFWZ_DqEs8hJQbuD4"

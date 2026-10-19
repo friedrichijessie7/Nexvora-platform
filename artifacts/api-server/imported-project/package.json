@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "dev": "nodemon server/server.js",
-    "migrate": "psql \"$DATABASE_URL\" -f docs/schema.sql",
+    "migrate": "psql \"$SUPABASE_DATABASE_URL\" -f docs/schema.sql",
     "health": "curl -fsS http://localhost:${PORT:-3000}/health"
   },
   "engines": {
