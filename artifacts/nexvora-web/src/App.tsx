@@ -4,6 +4,7 @@ import { ArrowUpRight, LoaderCircle, RefreshCw } from 'lucide-react';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { trackEvent } from '@/lib/analytics';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, Router as WouterRouter } from 'wouter';
 
@@ -58,8 +59,13 @@ function TrackingPage() {
     try {
       const response = await fetch(`/api/track/${encodeURIComponent(normalizedCode)}`);
       const result = await parseResponse(response);
-      setShipment(result.data.shipment);
+      const trackedShipment = result.data?.shipment;
+      if (!trackedShipment || typeof trackedShipment !== 'object') {
+        throw new Error('Visibility unavailable.');
+      }
+      setShipment(trackedShipment);
       setEvents(Array.isArray(result.data.events) ? result.data.events : []);
+      trackEvent('shipment_tracking_succeeded', { surface: 'public_tracking' });
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Visibility unavailable.');
     } finally {
