@@ -6,8 +6,9 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_hash text;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_expires_at timestamptz;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS account_type text NOT NULL DEFAULT 'personal' CHECK (account_type IN ('personal','business'));
 ALTER TABLE users ADD COLUMN IF NOT EXISTS company_name text;
-CREATE INDEX IF NOT EXISTS users_tracking_code_idx ON users (tracking_code);
+CREATE INDEX IF NOT EXISTS shipments_tracking_code_idx ON shipments (tracking_code);
 CREATE INDEX IF NOT EXISTS users_verification_token_hash_idx ON users (verification_token_hash);
+CREATE INDEX IF NOT EXISTS users_reset_token_hash_idx ON users (reset_token_hash);
 CREATE INDEX IF NOT EXISTS users_user_id_idx ON users (id);
 
 CREATE TABLE IF NOT EXISTS wallets (user_id uuid PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, balance_cents bigint NOT NULL DEFAULT 0 CHECK (balance_cents >= 0), currency text NOT NULL DEFAULT 'USD');
