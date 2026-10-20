@@ -4,7 +4,7 @@ const { validateTrackingCode } = require('../services/trackingCodeGenerator');
 async function getByCode(req,res,next) {
   try {
     const code=String(req.params.code||'').toUpperCase();
-    if(!validateTrackingCode(code)) return res.status(400).json({success:false,error:'Invalid tracking code.',code:'INVALID_CODE_FORMAT'});
+    if(!validateTrackingCode(code)) return res.status(400).json({success:false,error:'Invalid visibility code.',code:'INVALID_CODE_FORMAT'});
     const {data:shipment,error}=await supabaseAdmin.from('shipments').select('id,tracking_code,status,service_type,consignee_address_generalized,privacy_mode,current_lat,current_lng,last_verified_at,delivered_at,proof_of_delivery').eq('tracking_code',code).maybeSingle();
     if(error) throw error;
     if(!shipment) return res.status(404).json({success:false,error:'Asset movement not found.',code:'NOT_FOUND'});
