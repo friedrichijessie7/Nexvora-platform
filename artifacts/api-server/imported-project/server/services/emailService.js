@@ -1,13 +1,31 @@
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 
-function emailTemplate(kind, values = {}) {
-  const code = values.trackingCode ? `Tracking code: ${values.trackingCode}` : '';
-  const link = values.link ? `<p><a href="${values.link}">${values.link}</a></p>` : '';
-  const title = kind === 'verification' ? 'Verify your NEXVORA account' : kind === 'password-reset' ? 'Reset your NEXVORA password' : kind === 'booking-confirmation' ? 'Your shipment is booked' : 'Shipment status update';
-  return `<h1>${title}</h1><p>Hello ${values.name || 'there'},</p><p>${values.message || ''}</p>${code}${link}<p>NEXVORA logistics</p>`;
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>\"']/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '\"': '&quot;',
+    "'": '&#39;',
+  }[character]));
 }
 
-export async function sendEmail({ to, subject, kind = 'status-update', values = {} }) {
+function emailTemplate(kind, values = {}) {
+  const title = kind === 'verification'
+    ? 'Verify your NEXVORA account'
+    : kind === 'password-reset'
+      ? 'Reset your NEXVORA password'
+      : kind === 'booking-confirmation'
+        ? 'Your shipment is booked'
+        : 'Shipment status update';
+  const name = escapeHtml(values.name || 'there');
+  const message = escapeHtml(values.message || '');
+  const code = values.trackingCode ? `<p>Tracking code: <strong>${escapeHtml(values.trackingCode)}</strong></p>` : '';
+  const link = values.link ? `<p><a href="${escapeHtml(values.link)}">Continue securely</a></p>` : '';
+  return `<h1>${title}</h1><p>Hello ${name},</p><p>${message}</p>${code}${link}<p>NEXVORA logistics</p>`;
+}
+
+async function sendEmail({ to, subject, kind = 'status-update', values = {} }) {
   if (!to) return { sent: false, reason: 'missing-recipient' };
   const from = process.env.EMAIL_FROM || 'NEXVORA <noreply@localhost>';
   const html = emailTemplate(kind, values);
@@ -24,7 +42,9 @@ export async function sendEmail({ to, subject, kind = 'status-update', values = 
   return { sent: true, data: await response.json() };
 }
 
-export const sendVerificationEmail = (to, link, name) => sendEmail({ to, kind: 'verification', subject: 'Verify your NEXVORA account', values: { link, name, message: 'Confirm your email address to activate your account.' } });
-export const sendPasswordResetEmail = (to, link, name) => sendEmail({ to, kind: 'password-reset', subject: 'Reset your NEXVORA password', values: { link, name, message: 'Use this secure link to reset your password.' } });
-export const sendBookingConfirmation = (to, trackingCode, name) => sendEmail({ to, kind: 'booking-confirmation', subject: 'NEXVORA shipment confirmation', values: { trackingCode, name, message: 'Your shipment has been booked successfully.' } });
-export const sendStatusUpdateEmail = (to, trackingCode, status) => sendEmail({ to, kind: 'status-update', subject: `NEXVORA shipment ${status}`, values: { trackingCode, message: `Shipment status: ${status}.` } });
+const sendVerificationEmail = (to, link, name) => sendEmail({ to, kind: 'verification', subject: 'Verify your NEXVORA account', values: { link, name, message: 'Confirm your email address to activate your account.' } });
+const sendPasswordResetEmail = (to, link, name) => sendEmail({ to, kind: 'password-reset', subject: 'Reset your NEXVORA password', values: { link, name, message: 'Use this secure link to reset your password.' } });
+const sendBookingConfirmation = (to, trackingCode, name) => sendEmail({ to, kind: 'booking-confirmation', subject: 'NEXVORA shipment confirmation', values: { trackingCode, name, message: 'Your shipment has been booked successfully.' } });
+const sendStatusUpdateEmail = (to, trackingCode, status) => sendEmail({ to, kind: 'status-update', subject: `NEXVORA shipment ${status}`, values: { trackingCode, message: `Shipment status: ${status}.` } });
+
+module.exports = { sendEmail, sendVerificationEmail, sendPasswordResetEmail, sendBookingConfirmation, sendStatusUpdateEmail };
