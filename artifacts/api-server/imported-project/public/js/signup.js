@@ -19,7 +19,7 @@
     try {
       await NexvoraAPI.request('/api/auth/register', { method: 'POST', body: JSON.stringify(data) });
       form.reset(); syncCompany();
-      status.textContent = 'Check your email to verify your account.';
+      status.textContent = 'Check your email to verify your account. Once verified, sign in to manage shipments.';
       NexvoraAPI.toast('Verification email sent.', 'success');
     } catch (error) {
       status.textContent = error.message || 'We could not create your account. Please try again.';

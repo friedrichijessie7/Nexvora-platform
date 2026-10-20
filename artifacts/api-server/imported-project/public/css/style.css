@@ -104,6 +104,12 @@ input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible
   .footer-grid { grid-template-columns: 1.5fr repeat(4, 1fr); }
 }
 
+.stack { display: grid; gap: 12px; }
+.shipment-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--border, #ddd); }
+.shipment-row:last-child { border-bottom: 0; }
+.shipment-row > div:last-child { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+.status-pill { display: inline-flex; align-items: center; min-height: 28px; padding: 4px 10px; border-radius: 999px; background: #f3eafa; color: #4d148c; font-size: .78rem; font-weight: 800; text-transform: capitalize; }
+.tracking-code { font-family: "Courier New", monospace; letter-spacing: .04em; }
 @media (max-width: 767px) {
   .main-nav { position: relative; flex-wrap: wrap; }
   .menu-toggle { display: inline-flex; }
