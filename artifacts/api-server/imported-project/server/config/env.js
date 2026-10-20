@@ -18,7 +18,7 @@ module.exports = Object.freeze({
   SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || null,
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_ISSUER: process.env.JWT_ISSUER || 'dynamic-supply-chain-os',
-  ALLOWED_ORIGINS: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',').map((v) => v.trim()).filter(Boolean),
+  ALLOWED_ORIGINS: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5173').split(',').map((v) => v.trim()).filter(Boolean),
   BCRYPT_ROUNDS: Math.min(15, Math.max(10, Number(process.env.BCRYPT_ROUNDS || 12))),
   TRACKING_PREFIX: (process.env.TRACKING_PREFIX || 'NX').toUpperCase(),
   COMPANY_NAME: process.env.COMPANY_NAME || 'Northstar OS',
