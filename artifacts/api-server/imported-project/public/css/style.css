@@ -32,7 +32,8 @@ img { max-width: 100%; }
 .site-header { position: sticky; top: 0; z-index: 20; background: #ffffff; color: var(--deep); border-bottom: 1px solid var(--border); box-shadow: 0 3px 16px rgba(43, 10, 79, .12); }
 .main-nav { min-height: 74px; display: flex; align-items: center; gap: 28px; }
 .brand { display: inline-flex; align-items: center; color: var(--purple); font-weight: 900; letter-spacing: -.06em; font-size: 1.9rem; white-space: nowrap; }
-.brand-arrow { color: var(--orange); font-size: 1.05em; margin-left: 5px; }
+.brand-arrow { display: inline-block; width: 34px; height: 18px; margin-left: 8px; background: var(--orange); clip-path: polygon(0 28%, 58% 28%, 58% 0, 100% 50%, 58% 100%, 58% 72%, 0 72%); }
+@media (max-width: 767px) { .brand-arrow { width: 28px; height: 16px; } }
 .nav-links { display: flex; gap: 26px; margin-left: auto; font-weight: 700; color: var(--deep); }
 .nav-links a { padding: 25px 0; border-bottom: 3px solid transparent; }
 .nav-links a:hover { border-bottom-color: var(--orange); }
