@@ -24,7 +24,7 @@ async function parseResponse(response: Response): Promise<AnyRecord> {
 function BrandNav({ admin = false, onSignOut }: { admin?: boolean; onSignOut?: () => void }) {
   return (
     <nav className="top-nav" aria-label="Main navigation">
-      <Link className="brand" href="/" aria-label="NEXVORA home" data-testid="link-brand-home">NEXVORA<span className="brand-mark">.</span></Link>
+      <Link className="brand" href="/" aria-label="FedEx home" data-testid="link-brand-home">FedEx<span className="brand-mark">.</span></Link>
       {admin ? <div className="admin-nav-actions"><Link href="/" className="nav-link" data-testid="link-public-tracking">Public tracking</Link><button className="button-quiet" type="button" onClick={onSignOut} data-testid="button-logout">Sign out</button></div>
         : <div className="admin-nav-actions"><Link className="nav-link" href="/login" data-testid="link-login">Sign in</Link><Link className="button-primary" href="/signup" data-testid="link-create-account">Create account</Link></div>}
     </nav>
@@ -59,7 +59,7 @@ function TrackingPage() {
     <main className="app-shell">
       <BrandNav />
       <section className="hero">
-        <p className="eyebrow">Supply chain visibility · NEXVORA</p>
+        <p className="eyebrow">Supply chain visibility · FedEx</p>
         <h1>Movement clarity,<br />without the noise.</h1>
         <p className="hero-copy">Every shipment has a story. See the last confirmed point in its journey, with verified updates and the details that matter.</p>
         <form className="form-block" onSubmit={track}>
@@ -80,7 +80,7 @@ function TrackingPage() {
         <article className="panel"><p className="eyebrow">Stay in control</p><h2>Visibility that belongs to you.</h2><p className="result-meta">A customer account brings every shipment assigned to you into one private, organized view.</p><Link href="/signup" className="nav-link" data-testid="link-create-customer-account">Create your customer account <ArrowUpRight size={15} /></Link></article>
         <article className="panel"><p className="eyebrow">Recorded in motion</p><h2>Verified updates, useful context.</h2><p className="result-meta">Follow key status changes without exposing sensitive operational coordinates or unnecessary noise.</p><div className="account-toolbar"><RouteIcon size={17} color="#237965" /> Confirmed movement · protected location detail</div></article>
       </section>
-      <footer className="footer-note">NEXVORA · Supply chain visibility</footer>
+      <footer className="footer-note">FedEx · Supply chain visibility</footer>
     </main>
   );
 }
@@ -180,7 +180,7 @@ function AdminPage() {
       </form>
       {loginError && <p className="error-text" role="alert" data-testid="status-login-error">{loginError}</p>}
       <p className="result-meta">Customer access? <Link href="/login" className="text-link" data-testid="link-customer-signin">Use customer sign in</Link></p>
-      <footer className="footer-note" style={{ marginTop: 28 }}>NEXVORA · Operator access</footer>
+      <footer className="footer-note" style={{ marginTop: 28 }}>FedEx · Operator access</footer>
     </section></main>;
   }
   return (
@@ -227,7 +227,7 @@ function AdminPage() {
           {actionOutput && <pre className="action-output" id="action-output" aria-live="polite" data-testid="status-action-output">{actionOutput}</pre>}
         </section>}
       </section>
-      <footer className="footer-note">NEXVORA · Network operations</footer>
+      <footer className="footer-note">FedEx · Network operations</footer>
     </main>
   );
 }

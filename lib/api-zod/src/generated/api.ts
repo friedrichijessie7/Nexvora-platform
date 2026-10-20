@@ -48,7 +48,7 @@ export const SignupCustomerResponse = zod.object({
 
 
 /**
- * @summary Sign in to a NEXVORA account
+ * @summary Sign in to a FedEx account
  */
 
 

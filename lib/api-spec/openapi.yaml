@@ -64,7 +64,7 @@ paths:
     post:
       operationId: login
       tags: [auth]
-      summary: Sign in to a NEXVORA account
+      summary: Sign in to a FedEx account
       requestBody:
         required: true
         content:

@@ -16,7 +16,7 @@ function AccountNav({ email }: { email?: string }) {
   }
   return (
     <nav className="top-nav" aria-label="Account navigation">
-      <Link href="/account" className="brand" aria-label="NEXVORA account home" data-testid="link-account-home">NEXVORA<span className="brand-mark">.</span></Link>
+      <Link href="/account" className="brand" aria-label="FedEx account home" data-testid="link-account-home">FedEx<span className="brand-mark">.</span></Link>
       <div className="admin-nav-actions">
         {email && <span className="account-toolbar" data-testid="text-account-email">{email}</span>}
         <button className="button-quiet" type="button" onClick={() => void signOut()} disabled={logout.isPending} data-testid="button-customer-logout">{logout.isPending ? 'Signing out…' : 'Sign out'}</button>
@@ -54,7 +54,7 @@ function useCustomerSession() {
 function CustomerSessionGate({ unavailable, retry }: { unavailable: boolean; retry: () => void }) {
   return (
     <main className="app-shell">
-      <nav className="top-nav"><Link href="/" className="brand" aria-label="NEXVORA home">NEXVORA<span className="brand-mark">.</span></Link></nav>
+      <nav className="top-nav"><Link href="/" className="brand" aria-label="FedEx home">FedEx<span className="brand-mark">.</span></Link></nav>
       {unavailable ? (
         <section className="panel loading-block" role="alert" data-testid="status-account-session-error">
           <p className="eyebrow">Account connection</p>
@@ -70,7 +70,7 @@ function CustomerSessionGate({ unavailable, retry }: { unavailable: boolean; ret
 }
 
 function CustomerFrame({ email, children }: { email?: string; children: ReactNode }) {
-  return <main className="app-shell"><AccountNav email={email} />{children}<footer className="footer-note">NEXVORA · Customer shipment visibility</footer></main>;
+  return <main className="app-shell"><AccountNav email={email} />{children}<footer className="footer-note">FedEx · Customer shipment visibility</footer></main>;
 }
 
 function dateLabel(value?: string | null) {

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 
-const baseUrl = new URL(process.env.NEXVORA_SMOKE_BASE_URL ?? 'http://localhost:80');
+const baseUrl = new URL(process.env.FedEx_SMOKE_BASE_URL ?? 'http://localhost:80');
 const appOrigin = baseUrl.origin;
 
 async function get(path) {
@@ -20,7 +20,7 @@ async function verifyWebRoute(path) {
   );
 
   const html = await response.text();
-  assert.match(html, /<title>NEXVORA<\/title>/i, `${path} should serve the NEXVORA app`);
+  assert.match(html, /<title>FedEx<\/title>/i, `${path} should serve the FedEx app`);
   assert.match(html, /<div id="root"><\/div>/i, `${path} should serve the React app shell`);
 }
 
@@ -58,10 +58,10 @@ async function verifyInvalidTrackingRoute() {
 }
 
 await verifyWebRoute('/');
-console.log('PASS / serves the NEXVORA web app');
+console.log('PASS / serves the FedEx web app');
 
 await verifyWebRoute('/pages/admin.html');
-console.log('PASS /pages/admin.html serves the NEXVORA web app');
+console.log('PASS /pages/admin.html serves the FedEx web app');
 
 await verifyHealthRoute();
 console.log('PASS /health reaches the shipment API');

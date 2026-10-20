@@ -5,7 +5,7 @@ import { getGetCurrentUserQueryKey, useLogin, useSignupCustomer } from '@workspa
 import { useQueryClient } from '@tanstack/react-query';
 
 function Brand() {
-  return <Link href="/" className="brand" aria-label="NEXVORA home" data-testid="link-brand-home">NEXVORA<span className="brand-mark">.</span></Link>;
+  return <Link href="/" className="brand" aria-label="FedEx home" data-testid="link-brand-home">FedEx<span className="brand-mark">.</span></Link>;
 }
 
 export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
@@ -55,7 +55,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
           <p className="result-meta"><ShieldCheck size={15} style={{ verticalAlign: 'middle', marginRight: 7 }} /> Private account access is protected by secure, same-origin session cookies.</p>
         </section>
         <section className="panel auth-card">
-          <p className="eyebrow">{isSignup ? 'Customer registration' : 'NEXVORA account'}</p>
+          <p className="eyebrow">{isSignup ? 'Customer registration' : 'FedEx account'}</p>
           <h2>{isSignup ? 'Create your account' : 'Sign in'}</h2>
           <p className="result-meta" style={{ marginTop: 5 }}>{isSignup ? 'Customer access only. Operator roles are assigned separately.' : 'Enter the email and password associated with your account.'}</p>
           <form className="auth-fields" onSubmit={submit}>
@@ -71,12 +71,12 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
             {error && <p className="error-text" role="alert" data-testid="status-auth-error">{error}</p>}
             <button className="button-primary" type="submit" disabled={pending} data-testid="button-auth-submit">{pending ? 'Please wait…' : isSignup ? 'Create customer account' : 'Sign in'} <ArrowUpRight size={15} style={{ verticalAlign: 'middle', marginLeft: 5 }} /></button>
           </form>
-          <p className="auth-switch">{isSignup ? 'Already have an account?' : 'New to NEXVORA?'}{' '}
+          <p className="auth-switch">{isSignup ? 'Already have an account?' : 'New to FedEx?'}{' '}
             <Link href={isSignup ? '/login' : '/signup'} data-testid="link-auth-switch">{isSignup ? 'Sign in' : 'Create a customer account'}</Link>
           </p>
         </section>
       </div>
-      <footer className="footer-note footer-row">NEXVORA · Supply chain visibility</footer>
+      <footer className="footer-note footer-row">FedEx · Supply chain visibility</footer>
     </main>
   );
 }
@@ -86,15 +86,15 @@ export function ForgotPasswordPage() {
     <main className="auth-shell">
       <nav className="top-nav" aria-label="Main navigation"><Brand /><Link href="/login" className="nav-link" data-testid="link-return-login"><ArrowLeft size={15} /> Return to sign in</Link></nav>
       <div className="auth-grid">
-        <section className="auth-intro"><p className="eyebrow">Account support</p><h1>Let’s get you<br />back on track.</h1><p>Password recovery is handled by the NEXVORA support team. This page does not send a reset email.</p></section>
+        <section className="auth-intro"><p className="eyebrow">Account support</p><h1>Let’s get you<br />back on track.</h1><p>Password recovery is handled by the FedEx support team. This page does not send a reset email.</p></section>
         <section className="panel auth-card">
           <p className="eyebrow">Password help</p><h2>Contact your account administrator</h2>
-          <p className="result-meta">For a customer account, reply to the shipment or onboarding communication you received from your NEXVORA contact. For operator access, use your organization’s approved support channel.</p>
+          <p className="result-meta">For a customer account, reply to the shipment or onboarding communication you received from your FedEx contact. For operator access, use your organization’s approved support channel.</p>
           <div className="notice" role="note" data-testid="notice-password-recovery">For your security, we can’t confirm whether an email address has an account or claim that a reset email was sent.</div>
           <p className="auth-switch"><Link href="/login" data-testid="link-back-signin">Back to sign in</Link></p>
         </section>
       </div>
-      <footer className="footer-note footer-row">NEXVORA · Account support</footer>
+      <footer className="footer-note footer-row">FedEx · Account support</footer>
     </main>
   );
 }
