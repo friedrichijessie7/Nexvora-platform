@@ -31,6 +31,6 @@
     node.textContent = message; node.dataset.type = type || 'info'; node.classList.add('is-visible');
     window.setTimeout(() => node.classList.remove('is-visible'), 3600);
   }
-  function validTrackingCode(value) { return /^NXV-[A-Z0-9]{10}-\d{2}$/.test(String(value || '').trim().toUpperCase()); }
+  function validTrackingCode(value) { return /^[A-Z]{2,5}-[A-HJ-NP-Z2-9]{10}-\d{2}$/.test(String(value || '').trim().toUpperCase()); }
   window.NexvoraAPI = { request, remember, clearToken, toast, validTrackingCode };
 })();
