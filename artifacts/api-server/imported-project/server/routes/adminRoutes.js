@@ -3,6 +3,7 @@ const c=require('../controllers/adminController');
 const {verifyToken,requireRole}=require('../middleware/auth');
 const {strictLimiter}=require('../middleware/rateLimiter');
 router.use(strictLimiter(),verifyToken);
+router.get('/customers',requireRole('superadmin','operator'),require('../controllers/customerController').listAdminCustomers);
 router.post('/shipments',requireRole('superadmin','operator'),c.createShipment);
 router.get('/shipments',requireRole('superadmin','operator','viewer'),require('../controllers/shipmentController').list);
 router.patch('/shipments/:id/status',requireRole('superadmin','operator'),c.updateStatus);

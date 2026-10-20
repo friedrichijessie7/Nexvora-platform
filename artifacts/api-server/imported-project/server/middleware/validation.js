@@ -5,11 +5,13 @@ function shipmentPayload(body = {}) {
   const errors = [];
   if (!cleanText(body.consignee_name)) errors.push('consignee_name is required');
   if (!Number.isFinite(Number(body.weight_kg)) || Number(body.weight_kg) <= 0) errors.push('weight_kg must be greater than zero');
+  const customerId = body.customer_id || null;
+  if (customerId !== null && (typeof customerId !== 'string' || customerId.length > 80)) errors.push('customer_id must identify a customer account');
   const address = body.consignee_address || {};
   return { errors, value: {
     consignee_name: cleanText(body.consignee_name), consignee_email: cleanText(body.consignee_email),
     weight_kg: Number(body.weight_kg), service_type: cleanText(body.service_type || 'standard', 50),
-    customer_id: body.customer_id || null, facility_id: body.facility_id || null,
+    customer_id: customerId, facility_id: body.facility_id || null,
     consignee_address: { city: cleanText(address.city || '', 120), country: cleanText(address.country || '', 2) },
     privacy_mode: body.privacy_mode !== false, security_flags: Array.isArray(body.security_flags) ? body.security_flags.slice(0, 12) : [],
   }};

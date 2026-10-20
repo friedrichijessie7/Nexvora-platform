@@ -10,6 +10,12 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Customer and operator authentication
+  - name: customers
+    description: Customer-owned shipment views
+  - name: admin
+    description: Operator account support
 paths:
   /healthz:
     get:
@@ -24,7 +30,212 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /auth/signup:
+    post:
+      operationId: signupCustomer
+      tags: [auth]
+      summary: Create a customer account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerSignupInput"
+      responses:
+        "201":
+          description: Account created and signed in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionResponse"
+        "400":
+          description: Invalid account information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Email is already registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Sign in to a NEXVORA account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Signed in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionResponse"
+        "401":
+          description: Credentials are invalid or account is unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/refresh:
+    post:
+      operationId: refreshSession
+      tags: [auth]
+      summary: Refresh an account session
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshSessionInput"
+      responses:
+        "200":
+          description: Session refreshed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRefreshResult"
+        "401":
+          description: Refresh session is invalid or expired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: End the current account session
+      responses:
+        "200":
+          description: Session ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogoutResult"
+  /auth/me:
+    get:
+      operationId: getCurrentUser
+      tags: [auth]
+      summary: Get the signed-in account
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Current account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentUserResponse"
+        "401":
+          description: No valid account session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /customer/shipments:
+    get:
+      operationId: listCustomerShipments
+      tags: [customers]
+      summary: List shipments assigned to the signed-in customer
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Customer's shipment list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerShipmentsResponse"
+        "401":
+          description: No valid account session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Customer account required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /customer/shipments/{id}:
+    get:
+      operationId: getCustomerShipment
+      tags: [customers]
+      summary: Get a shipment assigned to the signed-in customer
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Customer-owned shipment and public movement history
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerShipmentDetailResponse"
+        "401":
+          description: No valid account session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Customer account required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Shipment not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /admin/customers:
+    get:
+      operationId: listAdminCustomers
+      tags: [admin]
+      summary: List active customer accounts for shipment assignment
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Active customers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminCustomersResponse"
+        "401":
+          description: No valid account session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Operator, viewer, or superadmin account required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: nexvora_access
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +244,226 @@ components:
           type: string
       required:
         - status
+    ApiError:
+      type: object
+      required: [success, error, code]
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          type: string
+        code:
+          type: string
+    AccountUser:
+      type: object
+      required: [id, email, role]
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [customer, operator, viewer, superadmin]
+    CustomerSignupInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          minLength: 12
+          maxLength: 72
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 1
+    RefreshSessionInput:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+    SessionTokens:
+      type: object
+      required: [token, refreshToken]
+      properties:
+        token:
+          type: string
+        refreshToken:
+          type: string
+    AuthSessionData:
+      allOf:
+        - $ref: "#/components/schemas/SessionTokens"
+        - type: object
+          required: [user]
+          properties:
+            user:
+              $ref: "#/components/schemas/AccountUser"
+    AuthSessionResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          $ref: "#/components/schemas/AuthSessionData"
+    SessionRefreshResult:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          $ref: "#/components/schemas/SessionTokens"
+    CurrentUserResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: object
+          required: [user]
+          properties:
+            user:
+              $ref: "#/components/schemas/AccountUser"
+    LogoutResult:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: object
+          required: [message]
+          properties:
+            message:
+              type: string
+    CustomerShipment:
+      type: object
+      required:
+        - id
+        - tracking_code
+        - status
+        - status_changed_at
+        - consignee_name
+        - service_type
+        - weight_kg
+        - last_verified_at
+        - created_at
+      properties:
+        id:
+          type: string
+        tracking_code:
+          type: string
+        status:
+          type: string
+          enum: [created, picked_up, in_transit, out_for_delivery, delivered, failed, cancelled]
+        status_changed_at:
+          type: string
+          format: date-time
+        consignee_name:
+          type: string
+        consignee_address_generalized:
+          type: [string, "null"]
+        service_type:
+          type: string
+        weight_kg:
+          type: number
+        last_verified_at:
+          type: [string, "null"]
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    CustomerMovementEvent:
+      type: object
+      required: [id, event_type, status_to, created_at]
+      properties:
+        id:
+          type: string
+        event_type:
+          type: string
+        status_from:
+          type: [string, "null"]
+        status_to:
+          type: [string, "null"]
+        facility_name:
+          type: [string, "null"]
+        public_message:
+          type: [string, "null"]
+        created_at:
+          type: string
+          format: date-time
+    CustomerShipmentsResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: object
+          required: [shipments]
+          properties:
+            shipments:
+              type: array
+              items:
+                $ref: "#/components/schemas/CustomerShipment"
+    CustomerShipmentDetailResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: object
+          required: [shipment, events]
+          properties:
+            shipment:
+              $ref: "#/components/schemas/CustomerShipment"
+            events:
+              type: array
+              items:
+                $ref: "#/components/schemas/CustomerMovementEvent"
+    AdminCustomer:
+      type: object
+      required: [id, email]
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+    AdminCustomersResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: object
+          required: [customers]
+          properties:
+            customers:
+              type: array
+              items:
+                $ref: "#/components/schemas/AdminCustomer"
 

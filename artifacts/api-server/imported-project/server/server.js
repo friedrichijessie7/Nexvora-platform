@@ -1,6 +1,7 @@
 const express=require('express');
 const helmet=require('helmet');
 const cors=require('cors');
+const cookieParser=require('cookie-parser');
 const compression=require('compression');
 const morgan=require('morgan');
 const path=require('path');
@@ -9,6 +10,7 @@ const {globalLimiter}=require('./middleware/rateLimiter');
 const publicRoutes=require('./routes/publicRoutes');
 const authRoutes=require('./routes/authRoutes');
 const adminRoutes=require('./routes/adminRoutes');
+const customerRoutes=require('./routes/customerRoutes');
 const app=express();
 app.set('trust proxy',1);
 app.use(helmet({contentSecurityPolicy:{directives:{defaultSrc:["'self'"],styleSrc:["'self'","'unsafe-inline'"],scriptSrc:["'self'","'unsafe-inline'"],imgSrc:["'self'",'data:','https:'],connectSrc:["'self'"]}}}));
@@ -39,9 +41,9 @@ app.use((req, res, next) => {
     allowedHeaders: ['Content-Type', 'Authorization'],
   })(req, res, next);
 });
-app.use(compression());app.use(express.json({limit:'100kb'}));app.use(morgan(env.NODE_ENV==='production'?'combined':'dev'));app.use(globalLimiter());
+app.use(compression());app.use(express.json({limit:'100kb'}));app.use(cookieParser());app.use(morgan(env.NODE_ENV==='production'?'combined':'dev'));app.use(globalLimiter());
 app.get('/health',(req,res)=>res.json({success:true,data:{status:'healthy',service:env.COMPANY_NAME,timestamp:new Date().toISOString()}}));
-app.use('/api/track',publicRoutes);app.use('/api/auth',authRoutes);app.use('/api/admin',adminRoutes);
+app.use('/api/track',publicRoutes);app.use('/api/auth',authRoutes);app.use('/api/admin',adminRoutes);app.use('/api/customer',customerRoutes);
 app.use(express.static(path.join(__dirname,'..','public')));
 app.use('/api',(req,res)=>res.status(404).json({success:false,error:'API endpoint not found.',code:'NOT_FOUND'}));
 app.get('/{*path}',(req,res)=>res.sendFile(path.join(__dirname,'..','public','index.html')));

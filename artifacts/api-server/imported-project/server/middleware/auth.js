@@ -3,7 +3,7 @@ const env = require('../config/env');
 const { supabaseAdmin } = require('../services/db');
 
 async function verifyToken(req, res, next) {
-  const token = req.get('authorization')?.match(/^Bearer\s+(.+)$/i)?.[1];
+  const token = req.get('authorization')?.match(/^Bearer\s+(.+)$/i)?.[1] || req.cookies?.nexvora_access;
   if (!token) return res.status(401).json({ success: false, error: 'Authentication is required.', code: 'AUTH_REQUIRED' });
   try {
     const claims = jwt.verify(token, env.JWT_SECRET, { issuer: env.JWT_ISSUER });
