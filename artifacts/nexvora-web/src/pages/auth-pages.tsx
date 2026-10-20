@@ -12,6 +12,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const [error, setError] = useState('');
+  const [verificationEmail, setVerificationEmail] = useState('');
   const login = useLogin();
   const signup = useSignupCustomer();
   const isSignup = mode === 'signup';
@@ -26,8 +27,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
       if (isSignup) {
         const response = await signup.mutateAsync({ data: input });
         if (!response.success) throw new Error('We could not create your account. Please try again.');
-        await queryClient.invalidateQueries({ queryKey: getGetCurrentUserQueryKey() });
-        setLocation('/account');
+        setVerificationEmail(input.email);
       } else {
         const response = await login.mutateAsync({ data: input });
         if (!response.success) throw new Error('Sign in could not be completed. Check your details and try again.');
@@ -37,6 +37,19 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'We could not complete that request. Please try again.');
     }
+  }
+
+  if (verificationEmail) {
+    return (
+      <main className="auth-shell">
+        <nav className="top-nav" aria-label="Main navigation"><Brand /><Link href="/login" className="nav-link" data-testid="link-verification-signin">Return to sign in</Link></nav>
+        <div className="auth-grid">
+          <section className="auth-intro"><p className="eyebrow">One more step</p><h1>Check your<br />inbox.</h1><p>We sent a verification link to <strong>{verificationEmail}</strong>. Verify your email before signing in.</p></section>
+          <section className="panel auth-card"><p className="eyebrow">Email verification</p><h2>Verification email sent</h2><p className="result-meta">The link expires after 24 hours. If it does not arrive, check your spam folder or request another email from the sign-in page.</p><Link href="/login" className="button-primary" data-testid="button-verification-signin">Continue to sign in <ArrowUpRight size={15} style={{ verticalAlign: 'middle', marginLeft: 5 }} /></Link></section>
+        </div>
+        <footer className="footer-note footer-row">FedEx · Supply chain visibility</footer>
+      </main>
+    );
   }
 
   return (
