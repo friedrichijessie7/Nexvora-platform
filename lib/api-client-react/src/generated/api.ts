@@ -236,7 +236,7 @@ export const getLoginUrl = () => {
 }
 
 /**
- * @summary Sign in to a NEXVORA account
+ * @summary Sign in to a FedEx account
  */
 export const login = async (loginInput: LoginInput, options?: Parameters<typeof customFetch>[1]): Promise<AuthSessionResponse> => {
 
@@ -302,7 +302,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type LoginMutationVariables = {data: BodyType<LoginInput>}
 
     /**
- * @summary Sign in to a NEXVORA account
+ * @summary Sign in to a FedEx account
  */
 export const useLogin = <TError = ErrorType<ApiError>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof login>>, TError,LoginMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}

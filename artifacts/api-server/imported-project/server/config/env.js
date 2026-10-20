@@ -1,11 +1,28 @@
-require('dotenv').config();
+const path = require('path');
+const dotenv = require('dotenv');
+
+// Load the Vercel project environment for Node processes; existing process.env values win.
+dotenv.config({ path: '/vercel/share/.env.project' });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env.development.local') });
+
+const nodeEnv = process.env.NODE_ENV || 'development';
+const isDevelopment = nodeEnv !== 'production';
+const developmentDefaults = isDevelopment ? {
+  DATABASE_URL: 'postgresql://localhost:5432/nexvora_dev',
+  SUPABASE_URL: 'https://placeholder.supabase.co',
+  SUPABASE_SERVICE_KEY: 'development-service-key',
+  JWT_SECRET: 'nexvora-development-secret-do-not-use-in-production-0123456789',
+} : {};
+
+for (const [key, value] of Object.entries(developmentDefaults)) {
+  if (!process.env[key]) process.env[key] = value;
+}
 
 const required = ['DATABASE_URL', 'SUPABASE_URL', 'SUPABASE_SERVICE_KEY', 'JWT_SECRET'];
 const missing = required.filter((key) => !process.env[key]);
 if (missing.length) throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
 if (process.env.JWT_SECRET.length < 48) throw new Error('JWT_SECRET must be at least 48 characters.');
-
-const nodeEnv = process.env.NODE_ENV || 'development';
 const port = Number(process.env.PORT || 3000);
 if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('PORT must be between 1 and 65535.');
 

@@ -30,7 +30,15 @@ app.use((req, res, next) => {
     }
   }
 
-  if (origin && !sameOrigin && !allowAnyOrigin && !env.ALLOWED_ORIGINS.includes(origin)) {
+  const developmentOrigin = env.NODE_ENV !== 'production' && origin && (() => {
+    try {
+      return ['http:', 'https:'].includes(new URL(origin).protocol);
+    } catch {
+      return false;
+    }
+  })();
+
+  if (origin && !sameOrigin && !allowAnyOrigin && !developmentOrigin && !env.ALLOWED_ORIGINS.includes(origin)) {
     return next(Object.assign(new Error('Origin not allowed'), { status: 403, code: 'CORS_DENIED' }));
   }
 
