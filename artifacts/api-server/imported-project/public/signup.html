@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#4D148C">
+  <title>Create your NEXVORA account</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="utility-bar"><div class="shell"><a href="/">Home</a><a href="/signup.html">Create account</a><a href="/login.html">Sign in</a></div></div>
+    <div class="shell main-nav"><a class="brand" href="/" aria-label="NEXVORA home">NEXVORA<span class="brand-arrow" aria-hidden="true">➜</span></a><nav class="nav-links" aria-label="Primary"><a href="/quote.html">Ship</a><a href="/track.html">Track</a><a href="/services.html">Services</a><a href="/about.html">About</a></nav><div class="nav-actions"><a class="button button-secondary" href="/login.html">Sign in</a></div></div>
+  </header>
+  <main class="section"><div class="shell" style="max-width:640px">
+    <p class="eyebrow">CUSTOMER ACCOUNT</p><h1>Create your account</h1><p class="lede">Use any valid personal or business email address, including Gmail, Outlook, or iCloud.</p>
+    <form id="signup-form" class="panel" novalidate>
+      <label for="name">Full name</label><input id="name" name="name" autocomplete="name" required>
+      <label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@gmail.com" required><small class="muted">Personal email addresses are welcome.</small>
+      <label for="password">Password</label><input id="password" name="password" type="password" autocomplete="new-password" minlength="12" required><small class="muted">At least 12 characters with a letter and number.</small>
+      <label for="confirm-password">Confirm password</label><input id="confirm-password" name="confirm_password" type="password" autocomplete="new-password" required>
+      <label for="account-type">Account type</label><select id="account-type" name="account_type"><option value="personal">Personal</option><option value="business">Business</option></select>
+      <div id="company-wrap" hidden><label for="company-name">Company name <span class="muted">(optional)</span></label><input id="company-name" name="company_name" autocomplete="organization"></div>
+      <label class="check-row"><input id="terms" name="terms" type="checkbox" required> <span>I agree to the terms and privacy policy.</span></label>
+      <button class="button-primary" type="submit">Create account</button><p id="signup-status" class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </div></main>
+  <footer class="site-footer"><div class="shell"><div><a class="brand" href="/">NEXVORA<span class="brand-arrow" aria-hidden="true">➜</span></a><p>Simple, visible logistics for every customer.</p></div><div class="footer-bottom"><span>© 2026 NEXVORA</span><a href="/contact.html">Contact support</a></div></div></footer>
+  <script src="/js/api.js"></script><script src="/js/signup.js"></script>
+</body>
+</html>
