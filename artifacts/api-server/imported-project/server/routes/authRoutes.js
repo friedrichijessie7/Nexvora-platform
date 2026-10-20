@@ -12,5 +12,5 @@ router.post('/login',strictLimiter(),controller.login);
 router.post('/refresh',strictLimiter(),controller.refresh);
 router.post('/logout',controller.logout);
 router.get('/me',verifyToken,controller.me);
-router.post('/register',strictLimiter(),verifyToken,requireRole('superadmin'),controller.register);
+router.post('/staff/register',strictLimiter(),verifyToken,requireRole('superadmin'),controller.register);
 module.exports=router;

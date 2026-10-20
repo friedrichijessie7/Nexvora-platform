@@ -6,7 +6,7 @@
   const banner = document.getElementById('login-banner');
   const params = new URLSearchParams(window.location.search);
   if (params.get('verified') === '1') banner.textContent = 'Email verified. You can now sign in.';
-  if (params.get('error') === 'expired') banner.textContent = 'That verification link expired. Create a new verification email from your account flow.';
+  if (params.get('error') === 'expired') banner.textContent = 'That verification link expired. Enter your email below to request a new verification email.';
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     status.textContent = '';
