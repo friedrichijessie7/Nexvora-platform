@@ -44,9 +44,10 @@ app.use((req, res, next) => {
 app.use(compression());app.use(express.json({limit:'100kb'}));app.use(cookieParser());app.use(morgan(env.NODE_ENV==='production'?'combined':'dev'));app.use(globalLimiter());
 app.get('/health',(req,res)=>res.json({success:true,data:{status:'healthy',service:env.COMPANY_NAME,timestamp:new Date().toISOString()}}));
 app.use('/api/track',publicRoutes);app.use('/api/auth',authRoutes);app.use('/api/admin',adminRoutes);app.use('/api/customer',customerRoutes);
-app.use(express.static(path.join(__dirname,'..','public')));
+const staticDir = process.env.STATIC_DIR || path.join(__dirname, '..', 'public');
+app.use(express.static(staticDir, { index: 'index.html', maxAge: env.NODE_ENV === 'production' ? '1d' : 0 }));
 app.use('/api',(req,res)=>res.status(404).json({success:false,error:'API endpoint not found.',code:'NOT_FOUND'}));
-app.get('/{*path}',(req,res)=>res.sendFile(path.join(__dirname,'..','public','index.html')));
+app.get('/{*path}',(req,res)=>res.sendFile(path.join(staticDir,'index.html')));
 app.use((err,req,res,next)=>{const status=err.type==='entity.parse.failed'?400:(err.status||500);console.error(`[${req.method}] ${req.path}`,err.message);res.status(status).json({success:false,error:status===500&&env.NODE_ENV==='production'?'An internal error occurred.':err.message,code:err.code||(status===400?'INVALID_JSON':'INTERNAL_ERROR')});});
 if(require.main===module){app.listen(env.PORT,()=>console.log(`Control Center API listening on :${env.PORT}`));}
 module.exports=app;
