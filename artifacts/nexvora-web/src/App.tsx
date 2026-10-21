@@ -65,7 +65,7 @@ function TrackingPage() {
         <form className="form-block" onSubmit={track}>
           <label className="field-label" htmlFor="tracking-code">Enter your visibility code</label>
           <div className="search-row">
-            <input className="field" id="tracking-code" value={code} onChange={(event) => setCode(event.target.value)} placeholder="NX-6TKDW2NW4H-03" autoComplete="off" required data-testid="input-tracking-code" />
+            <input className="field" id="tracking-code" value={code} onChange={(event) => setCode(event.target.value)} placeholder="NXV-A7X9M2KP4R-07" autoComplete="off" required data-testid="input-tracking-code" />
             <button className="button-primary" disabled={loading} data-testid="button-track">{loading ? <><LoaderCircle size={16} className="spin-icon" /> Verifying</> : <>View movement <ArrowUpRight size={15} style={{ verticalAlign: 'middle', marginLeft: 5 }} /></>}</button>
           </div>
         </form>
