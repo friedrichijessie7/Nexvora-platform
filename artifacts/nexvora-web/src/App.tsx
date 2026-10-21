@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/reac
 import { ArrowDownRight, ArrowUpRight, LoaderCircle, RefreshCw, Route as RouteIcon } from 'lucide-react';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
+import { FedExHome } from '@/components/fedex-home';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { trackEvent } from '@/lib/analytics';
 import NotFound from '@/pages/not-found';
@@ -234,7 +235,7 @@ function AdminPage() {
 
 function Router() {
   return <ErrorBoundary><Switch>
-    <Route path="/" component={TrackingPage} />
+    <Route path="/" component={FedExHome} />
     <Route path="/signup"><AuthPage mode="signup" /></Route>
     <Route path="/login"><AuthPage mode="login" /></Route>
     <Route path="/forgot-password" component={ForgotPasswordPage} />
